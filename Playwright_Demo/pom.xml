@@ -43,16 +43,18 @@
   <build>
     <plugins>
       <!-- Use JUnit 5 (JUnit Jupiter) with Maven Surefire -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
-        <configuration>
-          <useModulePath>false</useModulePath>
-        </configuration>
-      </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.1.2</version>
+            <configuration>
+                <argLine>-Xmx1024m -Dfile.encoding=UTF-8</argLine>
+                <forkCount>1</forkCount>
+                <reuseForks>true</reuseForks>
+            </configuration>
+        </plugin>
 
-      <!-- Exec plugin so you can still run org.example.Main if needed -->
+        <!-- Exec plugin so you can still run org.example.Main if needed -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
