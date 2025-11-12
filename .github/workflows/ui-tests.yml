@@ -1,4 +1,3 @@
-name: Playwright UI Tests (Java + Maven)
 jobs:
   test:
     runs-on: ubuntu-latest
