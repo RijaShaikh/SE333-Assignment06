@@ -1,11 +1,4 @@
 name: Playwright UI Tests (Java + Maven)
-
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,10 +13,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
-
-      - name: Install Playwright browsers
-        working-directory: Playwright_Demo
-        run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
 
       - name: Run Maven tests
         working-directory: Playwright_Demo
