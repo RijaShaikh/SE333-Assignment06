@@ -3,7 +3,6 @@ package test.java.playwrightLLM;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.LoadState;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
@@ -33,32 +32,11 @@ public class BookstoreFlowLLMTest {
             page.navigate("https://depaul.bncollege.com/");
             page.waitForLoadState(LoadState.NETWORKIDLE);
 
-// Handle cookies
-            try {
-                page.locator("#onetrust-accept-btn-handler, button:has-text('Accept'), button:has-text('Accept All Cookies')")
-                        .first().click(new Locator.ClickOptions().setTimeout(4000));
-            } catch (Exception ignored) {}
-
-// Try to open the header search if it's hidden
-            try {
-                page.locator("button[aria-label*='Search'], .header-search-toggle, [aria-controls*='search'], .icon-search")
-                        .first().click(new Locator.ClickOptions().setTimeout(4000));
-                System.out.println("Search toggle clicked.");
-            } catch (Exception ignored) {
-                System.out.println("No search toggle found or already open.");
-            }
-
-// Ensure the visible search bar is targeted
-            Locator searchBox = page.locator("input[placeholder*='Search'], input[name*='search'], input[type='search']")
-                    .filter(new Locator.FilterOptions().setHasNot(page.locator("[type='hidden']")))
-                    .first();
-
-            searchBox.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-            searchBox.click();
-            searchBox.fill("earbuds");
-            searchBox.press("Enter");
-
-
+            Locator searchBox = page.locator("input[type='search'], input[placeholder*='Search'], input[aria-label*='Search'], input[name*='search']");
+            searchBox.first().waitFor(); // ensure search is visible before typing
+            searchBox.first().click();
+            searchBox.first().fill("earbuds");
+            searchBox.first().press("Enter");
 
             page.getByText("Brand").first().click();
             page.getByText("JBL").first().click();
