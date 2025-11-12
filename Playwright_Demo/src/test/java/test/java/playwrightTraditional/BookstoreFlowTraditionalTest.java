@@ -2,6 +2,7 @@ package test.java.playwrightTraditional;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
@@ -25,13 +26,19 @@ public class BookstoreFlowTraditionalTest {
             );
 
             Page page = context.newPage();
-            page.setDefaultTimeout(60000);
+            page.setDefaultTimeout(90000); // Wait up to 90s for elements in CI
+            page.setDefaultNavigationTimeout(90000);
+
 
             page.navigate("https://depaul.bncollege.com/");
-            Locator searchBox = page.locator("input[type='search'], input[aria-label='Search'], input[name='search']");
+            page.waitForLoadState(LoadState.NETWORKIDLE); // wait until site fully loads
+
+            Locator searchBox = page.locator("input[type='search'], input[placeholder*='Search'], input[aria-label*='Search'], input[name*='search']");
+            searchBox.first().waitFor(); // ensure search is visible before typing
             searchBox.first().click();
             searchBox.first().fill("earbuds");
             searchBox.first().press("Enter");
+
             page.getByText("Brand").first().click();
             page.getByText("JBL").first().click();
             page.getByText("Color").first().click();
