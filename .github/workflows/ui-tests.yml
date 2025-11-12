@@ -22,7 +22,7 @@ jobs:
           cache: 'maven'
 
       - name: Install Playwright browsers
-        run: mvn com.microsoft.playwright:playwright:${{ vars.PLAYWRIGHT_VERSION || '1.48.0' }}:install
+        run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
 
       - name: Run Maven tests
         run: mvn -B test
