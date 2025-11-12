@@ -33,19 +33,31 @@ public class BookstoreFlowLLMTest {
             page.navigate("https://depaul.bncollege.com/");
             page.waitForLoadState(LoadState.NETWORKIDLE);
 
-            try { page.locator("#onetrust-accept-btn-handler").click(new Locator.ClickOptions().setTimeout(4000)); } catch (Exception ignore) {}
-            try { page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Accept All Cookies|Accept Cookies|I Agree", Pattern.CASE_INSENSITIVE))).first().click(new Locator.ClickOptions().setTimeout(3000)); } catch (Exception ignore) {}
+// Handle cookies
+            try {
+                page.locator("#onetrust-accept-btn-handler, button:has-text('Accept'), button:has-text('Accept All Cookies')")
+                        .first().click(new Locator.ClickOptions().setTimeout(4000));
+            } catch (Exception ignored) {}
 
-            try { page.locator("button[aria-label*='Search'], [data-testid='search-toggle'], .icon-search, [aria-controls*='search']").first().click(new Locator.ClickOptions().setTimeout(3000)); } catch (Exception ignore) {}
+// Try to open the header search if it's hidden
+            try {
+                page.locator("button[aria-label*='Search'], .header-search-toggle, [aria-controls*='search'], .icon-search")
+                        .first().click(new Locator.ClickOptions().setTimeout(4000));
+                System.out.println("Search toggle clicked.");
+            } catch (Exception ignored) {
+                System.out.println("No search toggle found or already open.");
+            }
 
-            Locator searchBox = page.locator(
-                    "input[type='search'], input[placeholder*='Search'], input[aria-label*='Search'], input[name*='search']"
-            ).filter(new Locator.FilterOptions().setHasNot(page.locator("[type='hidden']"))).first();
+// Ensure the visible search bar is targeted
+            Locator searchBox = page.locator("input[placeholder*='Search'], input[name*='search'], input[type='search']")
+                    .filter(new Locator.FilterOptions().setHasNot(page.locator("[type='hidden']")))
+                    .first();
 
             searchBox.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
             searchBox.click();
             searchBox.fill("earbuds");
             searchBox.press("Enter");
+
 
 
             page.getByText("Brand").first().click();
