@@ -25,6 +25,7 @@ public class BookstoreFlowLLMTest {
             );
 
             Page page = context.newPage();
+            page.setDefaultTimeout(60000);
 
             page.navigate("https://depaul.bncollege.com/");
 

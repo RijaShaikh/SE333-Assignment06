@@ -25,6 +25,7 @@ public class BookstoreFlowTraditionalTest {
             );
 
             Page page = context.newPage();
+            page.setDefaultTimeout(60000);
 
             page.navigate("https://depaul.bncollege.com/");
             Locator searchBox = page.locator("input[type='search'], input[aria-label='Search'], input[name='search']");
