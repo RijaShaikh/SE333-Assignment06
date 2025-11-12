@@ -22,7 +22,9 @@ jobs:
           cache: 'maven'
 
       - name: Install Playwright browsers
+        working-directory: Playwright_Demo
         run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
 
       - name: Run Maven tests
+        working-directory: Playwright_Demo
         run: mvn -B test
