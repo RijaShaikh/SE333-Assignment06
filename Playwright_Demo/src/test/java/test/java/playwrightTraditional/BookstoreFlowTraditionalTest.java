@@ -3,6 +3,7 @@ package test.java.playwrightTraditional;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.LoadState;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
@@ -29,22 +30,23 @@ public class BookstoreFlowTraditionalTest {
             page.setDefaultTimeout(90000);
             page.setDefaultNavigationTimeout(90000);
 
-
             page.navigate("https://depaul.bncollege.com/");
             page.waitForLoadState(LoadState.NETWORKIDLE);
 
-            try {
-                page.locator("button:has-text('Accept All Cookies'), button:has-text('Accept')").first().click(new Locator.ClickOptions().setTimeout(5000));
-                System.out.println("Cookie banner closed successfully.");
-            } catch (Exception e) {
-                System.out.println("No cookie banner found, continuing...");
-            }
+            try { page.locator("#onetrust-accept-btn-handler").click(new Locator.ClickOptions().setTimeout(4000)); } catch (Exception ignore) {}
+            try { page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName(Pattern.compile("Accept All Cookies|Accept Cookies|I Agree", Pattern.CASE_INSENSITIVE))).first().click(new Locator.ClickOptions().setTimeout(3000)); } catch (Exception ignore) {}
 
-            Locator searchBox = page.locator("input[type='search'], input[placeholder*='Search'], input[aria-label*='Search'], input[name*='search']");
-            searchBox.first().waitFor(); // ensure search is visible before typing
-            searchBox.first().click();
-            searchBox.first().fill("earbuds");
-            searchBox.first().press("Enter");
+            try { page.locator("button[aria-label*='Search'], [data-testid='search-toggle'], .icon-search, [aria-controls*='search']").first().click(new Locator.ClickOptions().setTimeout(3000)); } catch (Exception ignore) {}
+
+            Locator searchBox = page.locator(
+                    "input[type='search'], input[placeholder*='Search'], input[aria-label*='Search'], input[name*='search']"
+            ).filter(new Locator.FilterOptions().setHasNot(page.locator("[type='hidden']"))).first();
+
+            searchBox.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+            searchBox.click();
+            searchBox.fill("earbuds");
+            searchBox.press("Enter");
+
 
             page.getByText("Brand").first().click();
             page.getByText("JBL").first().click();
