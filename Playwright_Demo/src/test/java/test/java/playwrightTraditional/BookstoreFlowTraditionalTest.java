@@ -26,12 +26,19 @@ public class BookstoreFlowTraditionalTest {
             );
 
             Page page = context.newPage();
-            page.setDefaultTimeout(90000); // Wait up to 90s for elements in CI
+            page.setDefaultTimeout(90000);
             page.setDefaultNavigationTimeout(90000);
 
 
             page.navigate("https://depaul.bncollege.com/");
-            page.waitForLoadState(LoadState.NETWORKIDLE); // wait until site fully loads
+            page.waitForLoadState(LoadState.NETWORKIDLE);
+
+            try {
+                page.locator("button:has-text('Accept All Cookies'), button:has-text('Accept')").first().click(new Locator.ClickOptions().setTimeout(5000));
+                System.out.println("Cookie banner closed successfully.");
+            } catch (Exception e) {
+                System.out.println("No cookie banner found, continuing...");
+            }
 
             Locator searchBox = page.locator("input[type='search'], input[placeholder*='Search'], input[aria-label*='Search'], input[name*='search']");
             searchBox.first().waitFor(); // ensure search is visible before typing
